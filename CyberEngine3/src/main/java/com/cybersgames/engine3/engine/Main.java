@@ -21,7 +21,7 @@ public class Main {
 		cleanUp();
 	}
 	
-	private void init() {
+	private void init() throws Exception {
 		
 		if (!glfwInit()) {
 			throw new RuntimeException("Failed to initialize GLFW");
@@ -36,9 +36,10 @@ public class Main {
 		}
 		
 		window.init();
-		renderer.init();
 		
 		GL.createCapabilities();
+		
+		renderer.init();
 		
 	}
 	
@@ -61,9 +62,6 @@ public class Main {
 	}
 	
 	private void render() throws Exception {
-		
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		
 		renderer.render();
 		
