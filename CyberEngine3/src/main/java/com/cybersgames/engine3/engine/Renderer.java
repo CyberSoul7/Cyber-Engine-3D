@@ -17,13 +17,7 @@ import java.nio.IntBuffer;
 
 public class Renderer {
 	
-	private int vbo;
-	
-	private int vao;
-	
-	private int ebo;
-	
-	private int vertexCount;
+	private Mesh mesh;
 	
 	private ShaderProgram mainShaderProgram;
 	
@@ -37,47 +31,19 @@ public class Renderer {
 		mainShaderProgram.link();
 		
 		float vertices[] = {
-			0.0f, 0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f
+			0.5f, -0.5f, 0.0f, //bottom right
+			-0.5f, -0.5f, 0.0f, //bottom left
+			0.0f, 0.5f, 0.0f //top
+		};
+		float colors[] = {
+			1.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 1.0f
 		};
 		int indices[] = {
 			0, 1, 2 //triangle 
 		};
-		
-		FloatBuffer verticesBuffer = null;
-		IntBuffer indicesBuffer = null;
-		
-		try {
-			vertexCount = indices.length;
-			
-			vao = glGenVertexArrays();
-			glBindVertexArray(vao);
-			
-			vbo = glGenBuffers();
-			verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
-			verticesBuffer.put(vertices).flip();
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
-			glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-			
-			ebo = glGenBuffers();
-			indicesBuffer = MemoryUtil.memAllocInt(indices.length);
-			indicesBuffer.put(indices).flip();
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
-			
-			//Unbind VAO and VBO
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
-		} finally {
-			if (verticesBuffer != null) {
-				MemoryUtil.memFree(verticesBuffer);
-			}
-			if (indicesBuffer != null) {
-				MemoryUtil.memFree(indicesBuffer);
-			}
-		}
+		mesh = new Mesh(vertices, indices, colors);
 		
 	}
 	
@@ -86,24 +52,24 @@ public class Renderer {
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		double timeValue = glfwGetTime();
-		float greenValue = (float) (Math.sin(timeValue) / 2.0f) + 0.5f;
-		int vertexColorLocation = glGetUniformLocation(mainShaderProgram.getId(), "ourColor");
-		
 		mainShaderProgram.bind();
 		
-		glBindVertexArray(vao);
+		glBindVertexArray(mesh.getVao());
 		glEnableVertexAttribArray(0);
-		
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		glEnableVertexAttribArray(1);
 		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
 		
 		mainShaderProgram.unbind();
 		
+	}
+	
+	public void cleanUp() {
+		mesh.cleanUp();
 	}
 	
 }
