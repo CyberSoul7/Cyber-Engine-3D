@@ -72,4 +72,8 @@ public class ShaderProgram {
 		glUseProgram(0);
 	}
 	
+	public int getId() {
+		return programId;
+	}
+	
 }

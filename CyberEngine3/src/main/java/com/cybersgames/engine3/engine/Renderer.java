@@ -37,14 +37,12 @@ public class Renderer {
 		mainShaderProgram.link();
 		
 		float vertices[] = {
-			0.5f, 0.5f, 0.0f, //top right
-			0.5f, -0.5f, 0.0f, //bottom right
-			-0.5f, -0.5f, 0.0f, //bottom left
-			-0.5f, 0.5f, 0.0f //top left
+			0.0f, 0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			-0.5f, -0.5f, 0.0f
 		};
 		int indices[] = {
-			0, 1, 3, //triangle 1
-			1, 2, 3 //triangle 2
+			0, 1, 2 //triangle 
 		};
 		
 		FloatBuffer verticesBuffer = null;
@@ -80,6 +78,7 @@ public class Renderer {
 				MemoryUtil.memFree(indicesBuffer);
 			}
 		}
+		
 	}
 	
 	public void render() throws Exception {
@@ -87,10 +86,16 @@ public class Renderer {
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+		double timeValue = glfwGetTime();
+		float greenValue = (float) (Math.sin(timeValue) / 2.0f) + 0.5f;
+		int vertexColorLocation = glGetUniformLocation(mainShaderProgram.getId(), "ourColor");
+		
 		mainShaderProgram.bind();
 		
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
+		
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
