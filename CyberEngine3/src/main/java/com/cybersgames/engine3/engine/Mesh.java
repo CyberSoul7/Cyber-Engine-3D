@@ -31,9 +31,9 @@ public class Mesh {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 		
-		vertVbo = createVbo(vertices, 0);
-		colorVbo = createVbo(colors, 1);
-		texturesVbo = createVbo(textures, 2);
+		vertVbo = createVbo(vertices, 0, 3);
+		colorVbo = createVbo(colors, 1, 3);
+		texturesVbo = createVbo(textures, 2, 2);
 		ebo = createVbo(indices);
 		
 		//Unbind VAO and VBO
@@ -60,7 +60,7 @@ public class Mesh {
 		
 	}
 	
-	private int createVbo(float data[], int arrayId) {
+	private int createVbo(float data[], int arrayId, int size) {
 		int id = glGenBuffers();
 		
 		FloatBuffer dataBuffer = null;
@@ -69,7 +69,7 @@ public class Mesh {
 			dataBuffer.put(data).flip();
 			glBindBuffer(GL_ARRAY_BUFFER, id);
 			glBufferData(GL_ARRAY_BUFFER, dataBuffer, GL_STATIC_DRAW);
-			glVertexAttribPointer(arrayId, 3, GL_FLOAT, false, 0, 0);
+			glVertexAttribPointer(arrayId, size, GL_FLOAT, false, 0, 0);
 		} finally {
 			if (dataBuffer != null) {
 				MemoryUtil.memFree(dataBuffer);
