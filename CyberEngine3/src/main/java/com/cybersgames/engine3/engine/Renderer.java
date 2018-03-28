@@ -3,6 +3,7 @@ package com.cybersgames.engine3.engine;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -24,20 +25,34 @@ public class Renderer {
 		mainShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/mainFragment.fs"));
 		mainShaderProgram.link();
 		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		
 		float vertices[] = {
+			0.5f, 0.5f, 0.0f, //top right
 			0.5f, -0.5f, 0.0f, //bottom right
 			-0.5f, -0.5f, 0.0f, //bottom left
-			0.0f, 0.5f, 0.0f //top
+			-0.5f, 0.5f, 0.0f //top left
 		};
 		float colors[] = {
 			1.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 1.0f
+			0.0f, 0.0f, 1.0f,
+			1.0f, 1.0f, 0.0f
+		};
+		float texCoords[] = {
+			1.0f, 1.0f,
+			1.0f, 0.0f,
+			0.0f, 0.0f,
+			0.0f, 1.0f
 		};
 		int indices[] = {
-			0, 1, 2 //triangle 
+			0, 1, 3,
+			1, 2, 3
 		};
-		mesh = new Mesh(vertices, indices, colors);
+		mesh = new Mesh(vertices, indices, colors, texCoords, "/textures/container.png");
 		
 	}
 	
@@ -47,16 +62,9 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		mainShaderProgram.bind();
+		mainShaderProgram.setInt("ourTexture", 0);
 		
-		glBindVertexArray(mesh.getVao());
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glBindVertexArray(0);
+		mesh.render();
 		
 		mainShaderProgram.unbind();
 		

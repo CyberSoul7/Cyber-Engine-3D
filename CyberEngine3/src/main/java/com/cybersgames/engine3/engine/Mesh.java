@@ -1,6 +1,8 @@
 package com.cybersgames.engine3.engine;
 
+import org.lwjgl.opengl.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -16,54 +18,82 @@ public class Mesh {
 	private int vao;
 	private int vertVbo;
 	private int colorVbo;
+	private int texturesVbo;
 	private int ebo;
+	
+	private Texture texture;
 
-	public Mesh(float vertices[], int indices[], float colors[]) {
+	public Mesh(float vertices[], int indices[], float colors[], float textures[], String texturePath) throws Exception {
+		vertexCount = indices.length;
 		
-		FloatBuffer verticesBuffer = null;
-		FloatBuffer colorsBuffer = null;
-		IntBuffer indicesBuffer = null;
+		texture = new Texture(texturePath);
 		
+		vao = glGenVertexArrays();
+		glBindVertexArray(vao);
+		
+		vertVbo = createVbo(vertices, 0);
+		colorVbo = createVbo(colors, 1);
+		texturesVbo = createVbo(textures, 2);
+		ebo = createVbo(indices);
+		
+		//Unbind VAO and VBO
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	
+	public void render() {
+		
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture.getId());
+		
+		glBindVertexArray(vao);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		
+		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+		
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glBindVertexArray(0);
+		
+	}
+	
+	private int createVbo(float data[], int arrayId) {
+		int id = glGenBuffers();
+		
+		FloatBuffer dataBuffer = null;
 		try {
-			vertexCount = indices.length;
-			
-			vao = glGenVertexArrays();
-			glBindVertexArray(vao);
-			
-			vertVbo = glGenBuffers();
-			verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
-			verticesBuffer.put(vertices).flip();
-			glBindBuffer(GL_ARRAY_BUFFER, vertVbo);
-			glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
-			glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-			
-			colorVbo = glGenBuffers();
-			colorsBuffer = MemoryUtil.memAllocFloat(colors.length);
-			colorsBuffer.put(colors).flip();
-			glBindBuffer(GL_ARRAY_BUFFER, colorVbo);
-			glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
-			glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
-			
-			ebo = glGenBuffers();
-			indicesBuffer = MemoryUtil.memAllocInt(indices.length);
-			indicesBuffer.put(indices).flip();
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
-			
-			//Unbind VAO and VBO
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
+			dataBuffer = MemoryUtil.memAllocFloat(data.length);
+			dataBuffer.put(data).flip();
+			glBindBuffer(GL_ARRAY_BUFFER, id);
+			glBufferData(GL_ARRAY_BUFFER, dataBuffer, GL_STATIC_DRAW);
+			glVertexAttribPointer(arrayId, 3, GL_FLOAT, false, 0, 0);
 		} finally {
-			if (verticesBuffer != null) {
-				MemoryUtil.memFree(verticesBuffer);
-			}
-			if (indicesBuffer != null) {
-				MemoryUtil.memFree(indicesBuffer);
-			}
-			if (colorsBuffer != null) {
-				MemoryUtil.memFree(colorsBuffer);
+			if (dataBuffer != null) {
+				MemoryUtil.memFree(dataBuffer);
 			}
 		}
+		return id;
+	}
+	
+	private int createVbo(int data[]) {
+		int id = glGenBuffers();
+		
+		IntBuffer dataBuffer = null;
+		
+		try {
+			dataBuffer = MemoryUtil.memAllocInt(data.length);
+			dataBuffer.put(data).flip();
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, dataBuffer, GL_STATIC_DRAW);
+		} finally {
+			if (dataBuffer != null) {
+				MemoryUtil.memFree(dataBuffer);
+			}
+		}
+		return id;
 	}
 	
 	public int getVao() {
@@ -81,6 +111,7 @@ public class Mesh {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(vertVbo);
 		glDeleteBuffers(colorVbo);
+		glDeleteBuffers(texturesVbo);
 		glDeleteBuffers(ebo);
 		
 		glBindVertexArray(0);

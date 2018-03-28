@@ -8,6 +8,7 @@
   
   <properties>
     <lwjgl.version>3.1.6</lwjgl.version>
+    <pngdecoder.version>1.0</pngdecoder.version>
   </properties>
 
 <profiles>
@@ -165,6 +166,11 @@
     <version>${lwjgl.version}</version>
     <classifier>${lwjgl.natives}</classifier>
     
+  </dependency>
+  <dependency>
+    <groupId>org.l33tlabs.twl</groupId>
+    <artifactId>pngdecoder</artifactId>
+    <version>${pngdecoder.version}</version>
   </dependency>
 </dependencies>
   
