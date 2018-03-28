@@ -68,6 +68,7 @@ public class Main {
 	}
 	
 	private void cleanUp() {
+		renderer.cleanUp();
 		glfwTerminate();
 	}
 	

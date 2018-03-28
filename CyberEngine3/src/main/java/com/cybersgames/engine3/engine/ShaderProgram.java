@@ -64,12 +64,28 @@ public class ShaderProgram {
 		
 	}
 	
+	public void setBoolean(String name, boolean value) {
+		glUniform1i(glGetUniformLocation(programId, name), value ? 1 : 0);
+	}
+	
+	public void setInt(String name, int value) {
+		glUniform1i(glGetUniformLocation(programId, name), value);
+	}
+	
+	public void setFloat(String name, float value) {
+		glUniform1f(glGetUniformLocation(programId, name), value);
+	}
+	
 	public void bind() {
 		glUseProgram(programId);
 	}
 	
 	public void unbind() {
 		glUseProgram(0);
+	}
+	
+	public int getId() {
+		return programId;
 	}
 	
 }
