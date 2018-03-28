@@ -9,12 +9,6 @@ import static org.lwjgl.opengl.GL30.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 public class Renderer {
 	
 	private Mesh mesh;
@@ -26,8 +20,8 @@ public class Renderer {
 	
 	public void init() throws Exception {
 		mainShaderProgram = new ShaderProgram();
-		mainShaderProgram.createVertexShader(Utils.loadResource("/vertex/mainVertex.vs"));
-		mainShaderProgram.createFragmentshader(Utils.loadResource("/fragment/mainFragment.fs"));
+		mainShaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex/mainVertex.vs"));
+		mainShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/mainFragment.fs"));
 		mainShaderProgram.link();
 		
 		float vertices[] = {
