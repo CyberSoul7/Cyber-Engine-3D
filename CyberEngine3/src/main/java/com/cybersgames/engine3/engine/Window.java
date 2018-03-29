@@ -52,6 +52,8 @@ public class Window {
 		
 		glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> {
 			glViewport(0, 0, width, height);
+			this.width = width;
+			this.height = height;
 		});
 		
 		if (vSync) {
@@ -62,6 +64,10 @@ public class Window {
 		
 		glfwShowWindow(windowHandle);
 		
+	}
+	
+	public float getAspectRatio() {
+		return width/height;
 	}
 	
 	public boolean isvSyncOn() {

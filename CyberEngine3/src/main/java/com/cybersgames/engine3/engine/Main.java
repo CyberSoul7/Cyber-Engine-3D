@@ -97,7 +97,7 @@ public class Main {
 	
 	private void render() throws Exception {
 		
-		renderer.render();
+		renderer.render(window);
 		
 	}
 	
