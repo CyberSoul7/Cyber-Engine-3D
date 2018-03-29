@@ -16,7 +16,7 @@ public class Main {
 	private Window window;
 	private Renderer renderer;
 	
-	public static int fps;
+	public static float fps;
 	
 	public Main() throws Exception {
 		window = new Window(800, 600, "Cyber Engine 3D", false);
@@ -73,8 +73,11 @@ public class Main {
 			render();
 			frames++;
 			
-			if (System.currentTimeMillis() - timer > 100) {
-				
+			if (System.currentTimeMillis() - timer > 500) {
+				timer += 500;
+				frames *= 2;
+				fps = (fps + frames) / 2;
+				frames = 0;
 			}
 			
 			glfwSwapBuffers(window.getHandle());
