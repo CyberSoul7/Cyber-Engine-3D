@@ -6,8 +6,14 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryStack;
+
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
 
 public class ShaderProgram {
 	
@@ -74,6 +80,14 @@ public class ShaderProgram {
 	
 	public void setFloat(String name, float value) {
 		glUniform1f(glGetUniformLocation(programId, name), value);
+	}
+	
+	public void setMatrix4f(String name, Matrix4f value) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			FloatBuffer fb = stack.mallocFloat(16);
+			value.get(fb);
+			glUniformMatrix4fv(glGetUniformLocation(programId, name), false, fb);
+		}
 	}
 	
 	public void bind() {

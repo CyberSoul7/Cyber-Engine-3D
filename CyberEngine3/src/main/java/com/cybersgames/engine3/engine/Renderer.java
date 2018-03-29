@@ -6,12 +6,19 @@ import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+
+import static org.joml.Math.PI;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 public class Renderer {
 	
-	private Mesh mesh;
+	private Mesh mesh1;
+	private Mesh mesh2;
 	
 	private ShaderProgram mainShaderProgram;
 	
@@ -51,7 +58,8 @@ public class Renderer {
 			0, 1, 3,
 			1, 2, 3
 		};
-		mesh = new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png");
+		mesh1 = new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png");
+		mesh2 = new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png");
 		
 	}
 	
@@ -62,14 +70,27 @@ public class Renderer {
 		
 		mainShaderProgram.bind();
 		
-		mesh.render(mainShaderProgram);
+		Matrix4f trans = new Matrix4f().identity();
+		trans.translate(new Vector3f(0.5f, -0.5f, 0.0f));
+		trans.rotate((float) glfwGetTime(), new Vector3f(0.0f, 0.0f, 1.0f));
+		mainShaderProgram.setMatrix4f("transform", trans);
+		
+		mesh1.render(mainShaderProgram);
+		
+		trans.identity();
+		trans.translate(new Vector3f(-0.5f, 0.5f, 0.0f));
+		trans.scale((float) Math.sin(glfwGetTime()));
+		//trans.rotate((float) glfwGetTime(), new Vector3f(0.0f, 0.0f, 1.0f));
+		mainShaderProgram.setMatrix4f("transform", trans);
+		
+		mesh2.render(mainShaderProgram);
 		
 		mainShaderProgram.unbind();
 		
 	}
 	
 	public void cleanUp() {
-		mesh.cleanUp();
+		mesh1.cleanUp();
 	}
 	
 }
