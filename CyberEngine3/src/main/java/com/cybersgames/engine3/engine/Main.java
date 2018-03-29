@@ -16,6 +16,8 @@ public class Main {
 	private Window window;
 	private Renderer renderer;
 	
+	public static int fps;
+	
 	public Main() throws Exception {
 		window = new Window(800, 600, "Cyber Engine 3D", false);
 		renderer = new Renderer();
@@ -48,14 +50,40 @@ public class Main {
 	
 	private void loop() throws Exception {
 		
+		long lastTime = System.nanoTime();
+		double amountOfTicks = 60.0;
+		double ns = 1_000_000_000 / amountOfTicks;
+		double delta = 0;
+		long timer = System.currentTimeMillis();
+		int frames = 0;
+		
 		while(!glfwWindowShouldClose(window.getHandle())) {
+			
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			
 			input();
 			
+			while (delta >= 1) {
+				tick();
+				delta--;
+			}
+			
 			render();
+			frames++;
+			
+			if (System.currentTimeMillis() - timer > 100) {
+				
+			}
 			
 			glfwSwapBuffers(window.getHandle());
 			glfwPollEvents();
 		}
+		
+	}
+	
+	private void tick() {
 		
 	}
 	

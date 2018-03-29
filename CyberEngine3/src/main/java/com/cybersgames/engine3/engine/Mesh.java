@@ -47,10 +47,7 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
-	public void render(ShaderProgram program) {
-		
-		program.setInt("texture1", 0);
-		program.setInt("texture2", 1);
+	public void render() {
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.getId());
@@ -126,6 +123,7 @@ public class Mesh {
 		glDeleteBuffers(vertVbo);
 		glDeleteBuffers(colorVbo);
 		glDeleteBuffers(texture1Vbo);
+		glDeleteBuffers(texture2Vbo);
 		glDeleteBuffers(ebo);
 		
 		glBindVertexArray(0);

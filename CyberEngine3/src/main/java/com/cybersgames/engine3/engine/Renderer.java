@@ -70,12 +70,15 @@ public class Renderer {
 		
 		mainShaderProgram.bind();
 		
+		mainShaderProgram.setInt("texture1", 0);
+		mainShaderProgram.setInt("texture2", 1);
+		
 		Matrix4f trans = new Matrix4f().identity();
 		trans.translate(new Vector3f(0.5f, -0.5f, 0.0f));
 		trans.rotate((float) glfwGetTime(), new Vector3f(0.0f, 0.0f, 1.0f));
 		mainShaderProgram.setMatrix4f("transform", trans);
 		
-		mesh1.render(mainShaderProgram);
+		mesh1.render();
 		
 		trans.identity();
 		trans.translate(new Vector3f(-0.5f, 0.5f, 0.0f));
@@ -83,7 +86,7 @@ public class Renderer {
 		//trans.rotate((float) glfwGetTime(), new Vector3f(0.0f, 0.0f, 1.0f));
 		mainShaderProgram.setMatrix4f("transform", trans);
 		
-		mesh2.render(mainShaderProgram);
+		mesh2.render();
 		
 		mainShaderProgram.unbind();
 		
