@@ -24,8 +24,8 @@ public class Renderer {
 		mainShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/mainFragment.fs"));
 		mainShaderProgram.link();
 		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		
@@ -42,16 +42,16 @@ public class Renderer {
 			1.0f, 1.0f, 0.0f
 		};
 		float texCoords[] = {
-			1.0f, 1.0f,
 			1.0f, 0.0f,
-			0.0f, 0.0f,
-			0.0f, 1.0f
+			1.0f, 1.0f,
+			0.0f, 1.0f,
+			0.0f, 0.0f
 		};
 		int indices[] = {
 			0, 1, 3,
 			1, 2, 3
 		};
-		mesh = new Mesh(vertices, indices, colors, texCoords, "/textures/container.png");
+		mesh = new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png");
 		
 	}
 	
@@ -61,9 +61,8 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		mainShaderProgram.bind();
-		mainShaderProgram.setInt("ourTexture", 0);
 		
-		mesh.render();
+		mesh.render(mainShaderProgram);
 		
 		mainShaderProgram.unbind();
 		

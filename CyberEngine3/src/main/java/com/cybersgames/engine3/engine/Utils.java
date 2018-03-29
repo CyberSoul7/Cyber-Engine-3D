@@ -14,4 +14,20 @@ public class Utils {
 		return result;
 	}
 	
+	public static void arrayByScalar(int[] array, int scalar) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] *= scalar;
+		}
+	}
+	
+	public static void arrayByScalar(float[] array, int scalar) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] *= scalar;
+		}
+	}
+	
+	public static float clamp(float value, float min, float max) {
+		return (Math.max(Math.min(value, max), min));
+	}
+	
 }

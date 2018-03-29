@@ -2,7 +2,9 @@ package com.cybersgames.engine3.engine;
 
 import org.lwjgl.opengl.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -18,22 +20,26 @@ public class Mesh {
 	private int vao;
 	private int vertVbo;
 	private int colorVbo;
-	private int texturesVbo;
+	private int texture1Vbo;
+	private int texture2Vbo;
 	private int ebo;
 	
 	private Texture texture;
+	private Texture overlay;
 
-	public Mesh(float vertices[], int indices[], float colors[], float textures[], String texturePath) throws Exception {
+	public Mesh(float vertices[], int indices[], float colors[], float textures[], String texturePath, String overlayPath) throws Exception {
 		vertexCount = indices.length;
 		
 		texture = new Texture(texturePath);
+		overlay = new Texture(overlayPath);
 		
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 		
 		vertVbo = createVbo(vertices, 0, 3);
 		colorVbo = createVbo(colors, 1, 3);
-		texturesVbo = createVbo(textures, 2, 2);
+		texture1Vbo = createVbo(textures, 2, 2);
+		texture2Vbo = createVbo(textures, 3, 2);
 		ebo = createVbo(indices);
 		
 		//Unbind VAO and VBO
@@ -41,21 +47,29 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
-	public void render() {
+	public void render(ShaderProgram program) {
+		
+		program.setInt("texture1", 0);
+		program.setInt("texture2", 1);
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.getId());
+		
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, overlay.getId());
 		
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 		
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 		
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
 		glBindVertexArray(0);
 		
 	}
@@ -111,7 +125,7 @@ public class Mesh {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(vertVbo);
 		glDeleteBuffers(colorVbo);
-		glDeleteBuffers(texturesVbo);
+		glDeleteBuffers(texture1Vbo);
 		glDeleteBuffers(ebo);
 		
 		glBindVertexArray(0);
