@@ -8,6 +8,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
@@ -18,15 +19,19 @@ public class Window {
 	private int width, height;
 	private String title;
 	private boolean vSync;
+	private boolean resized;
 
 	public Window(int width, int height, String title, boolean vSync) {
 		this.width = width;
 		this.height = height;
 		this.title = title;
 		this.vSync = vSync;
+		this.resized = false;
 	}
 	
 	public void init() {
+		GLFWErrorCallback.createPrint(System.err).set();
+		
 		windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
 		
 		if (windowHandle == NULL) {
@@ -51,9 +56,9 @@ public class Window {
 		glfwMakeContextCurrent(windowHandle);
 		
 		glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> {
-			glViewport(0, 0, width, height);
-			this.width = width;
-			this.height = height;
+			Window.this.width = width;
+			Window.this.height = height;
+			Window.this.setResized(true);
 		});
 		
 		if (vSync) {
@@ -67,13 +72,29 @@ public class Window {
 	}
 	
 	public float getAspectRatio() {
-		return width/height;
+		return (float)width/(float)height;
 	}
 	
-	public boolean isvSyncOn() {
+	public boolean isvSync() {
 		return vSync;
 	}
-
+	
+	public boolean isResized() {
+		return resized;
+	}
+	
+	public void setResized(boolean resized) {
+		this.resized = resized;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
 	public void setvSync(boolean vSync) {
 		this.vSync = vSync;
 		if (vSync) {

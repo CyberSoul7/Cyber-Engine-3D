@@ -97,6 +97,11 @@ public class Main {
 	
 	private void render() throws Exception {
 		
+		if (window.isResized()) {
+			glViewport(0, 0, window.getWidth(), window.getHeight());
+			window.setResized(false);
+		}
+		
 		renderer.render(window);
 		
 	}

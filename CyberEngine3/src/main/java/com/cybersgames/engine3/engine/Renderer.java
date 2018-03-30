@@ -122,7 +122,7 @@ public class Renderer {
 		mainShaderProgram.setMatrix4f("view", viewMatrix);
 		
 		Matrix4f projectionMatrix = new Matrix4f().identity();
-		projectionMatrix.perspective((float) Math.toRadians(45.0f), window.getAspectRatio() * 1.0f, 0.1f, 100.0f);
+		projectionMatrix.perspective((float) Math.toRadians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
 		mainShaderProgram.setMatrix4f("projection", projectionMatrix);
 		
 		for (int i = 0; i < objects.size(); i++) {
