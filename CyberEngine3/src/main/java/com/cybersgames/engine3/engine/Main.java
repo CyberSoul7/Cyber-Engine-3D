@@ -18,6 +18,8 @@ public class Main {
 	
 	public static float fps;
 	
+	private Camera camera;
+	
 	public Main() throws Exception {
 		window = new Window(800, 600, "Cyber Engine 3D", false);
 		renderer = new Renderer();
@@ -27,6 +29,8 @@ public class Main {
 	}
 	
 	private void init() throws Exception {
+		
+		camera = new Camera(new Vector3f(0.0f, 0.0f, 5.0f));
 		
 		if (!glfwInit()) {
 			throw new RuntimeException("Failed to initialize GLFW");
@@ -93,6 +97,15 @@ public class Main {
 	private void input() {
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window.getHandle(), true);
+		float cameraSpeed = 0.05f;
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_W) == GLFW_PRESS) 
+			camera.setPosition(camera.getPosition().add(camera.getCameraFront().mul(cameraSpeed)));
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_S) == GLFW_PRESS)
+			camera.setPosition(camera.getPosition().sub(camera.getCameraFront().mul(cameraSpeed)));
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_A) == GLFW_PRESS)
+			camera.setPosition(camera.getPosition().sub(camera.getCameraFront().cross(camera.getCameraUp()).normalize().mul(cameraSpeed)));
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS)
+			camera.setPosition(camera.getPosition().add(camera.getCameraFront().cross(camera.getCameraUp()).normalize().mul(cameraSpeed)));
 	}
 	
 	private void render() throws Exception {
@@ -102,7 +115,7 @@ public class Main {
 			window.setResized(false);
 		}
 		
-		renderer.render(window);
+		renderer.render(window, camera);
 		
 	}
 	

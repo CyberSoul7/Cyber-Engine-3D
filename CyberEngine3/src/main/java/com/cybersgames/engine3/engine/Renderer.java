@@ -28,6 +28,7 @@ public class Renderer {
 	}
 	
 	public void init() throws Exception {
+		
 		mainShaderProgram = new ShaderProgram();
 		mainShaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex/mainVertex.vs"));
 		mainShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/mainFragment.fs"));
@@ -103,7 +104,7 @@ public class Renderer {
 		
 	}
 	
-	public void render(Window window) throws Exception {
+	public void render(Window window, Camera camera) throws Exception {
 		
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -117,8 +118,10 @@ public class Renderer {
 		modelMatrix.rotate((float) (glfwGetTime() * Math.toRadians(50.0f)), new Vector3f(0.5f, 1.0f, 0.0f));
 		mainShaderProgram.setMatrix4f("model", modelMatrix);
 		
-		Matrix4f viewMatrix = new Matrix4f().identity();
-		viewMatrix.translate(new Vector3f(0.0f, 0.0f, -5.0f));
+		Matrix4f viewMatrix = new Matrix4f().identity().
+				lookAt(camera.getPosition(),
+				camera.getPosition().add(camera.getCameraFront()),
+				camera.getCameraUp());
 		mainShaderProgram.setMatrix4f("view", viewMatrix);
 		
 		Matrix4f projectionMatrix = new Matrix4f().identity();
