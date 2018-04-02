@@ -57,8 +57,8 @@ public class Main {
 		
 		double lastTime = System.nanoTime();
 		double delta = 0;
-		float target = 60.0f;
-		float ns = target / 1_000_000_000;
+		double amountOfTicks = 60.0f;
+		double ns = 1_000_000_000 / amountOfTicks;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
 		
