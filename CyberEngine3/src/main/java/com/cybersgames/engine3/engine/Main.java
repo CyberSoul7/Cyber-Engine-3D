@@ -17,8 +17,11 @@ public class Main {
 	private Renderer renderer;
 	
 	public static float fps;
+	public static float deltaTime = 0.0f;
 	
-	private Camera camera;
+	private Vector3f cameraPos = new Vector3f(0.0f, 0.0f, 3.0f);
+	private Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
+	private Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
 	
 	public Main() throws Exception {
 		window = new Window(800, 600, "Cyber Engine 3D", false);
@@ -29,8 +32,6 @@ public class Main {
 	}
 	
 	private void init() throws Exception {
-		
-		camera = new Camera(new Vector3f(0.0f, 0.0f, 5.0f));
 		
 		if (!glfwInit()) {
 			throw new RuntimeException("Failed to initialize GLFW");
@@ -54,19 +55,20 @@ public class Main {
 	
 	private void loop() throws Exception {
 		
-		long lastTime = System.nanoTime();
-		double amountOfTicks = 60.0;
-		double ns = 1_000_000_000 / amountOfTicks;
+		double lastTime = System.nanoTime();
 		double delta = 0;
+		float target = 60.0f;
+		float ns = target / 1_000_000_000;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
 		
 		while(!glfwWindowShouldClose(window.getHandle())) {
 			
-			long now = System.nanoTime();
+			double now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			
+			deltaTime = (float) delta;
 			input();
 			
 			while (delta >= 1) {
@@ -91,21 +93,21 @@ public class Main {
 	}
 	
 	private void tick() {
-		
+		System.out.println(deltaTime);
 	}
 	
 	private void input() {
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window.getHandle(), true);
-		float cameraSpeed = 0.05f;
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_W) == GLFW_PRESS) 
-			camera.setPosition(camera.getPosition().add(camera.getCameraFront().mul(cameraSpeed)));
+		float cameraSpeed = 0.15f * deltaTime;
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_W) == GLFW_PRESS)
+			cameraPos.add(new Vector3f(cameraFront).mul(cameraSpeed));
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_S) == GLFW_PRESS)
-			camera.setPosition(camera.getPosition().sub(camera.getCameraFront().mul(cameraSpeed)));
+			cameraPos.sub(new Vector3f(cameraFront).mul(cameraSpeed));
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_A) == GLFW_PRESS)
-			camera.setPosition(camera.getPosition().sub(camera.getCameraFront().cross(camera.getCameraUp()).normalize().mul(cameraSpeed)));
+			cameraPos.sub(new Vector3f(cameraFront).cross(cameraUp).normalize().mul(cameraSpeed));
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS)
-			camera.setPosition(camera.getPosition().add(camera.getCameraFront().cross(camera.getCameraUp()).normalize().mul(cameraSpeed)));
+			cameraPos.add(new Vector3f(cameraFront).cross(cameraUp).normalize().mul(cameraSpeed));
 	}
 	
 	private void render() throws Exception {
@@ -115,7 +117,7 @@ public class Main {
 			window.setResized(false);
 		}
 		
-		renderer.render(window, camera);
+		renderer.render(window, cameraPos, cameraFront, cameraUp);
 		
 	}
 	

@@ -2,21 +2,14 @@ package com.cybersgames.engine3.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.joml.Math.PI;
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
+
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
 
 public class Renderer {
 	
@@ -104,7 +97,7 @@ public class Renderer {
 		
 	}
 	
-	public void render(Window window, Camera camera) throws Exception {
+	public void render(Window window, Vector3f cameraPos, Vector3f cameraFront, Vector3f cameraUp) throws Exception {
 		
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -118,10 +111,11 @@ public class Renderer {
 		modelMatrix.rotate((float) (glfwGetTime() * Math.toRadians(50.0f)), new Vector3f(0.5f, 1.0f, 0.0f));
 		mainShaderProgram.setMatrix4f("model", modelMatrix);
 		
-		Matrix4f viewMatrix = new Matrix4f().identity().
-				lookAt(camera.getPosition(),
-				camera.getPosition().add(camera.getCameraFront()),
-				camera.getCameraUp());
+		Matrix4f viewMatrix = new Matrix4f().identity();
+		//viewMatrix.translate(new Vector3f(0.0f, 0.0f, -3.0f));
+		Vector3f cameraTarget = new Vector3f(cameraPos).add(cameraFront);
+		viewMatrix.lookAt(cameraPos, cameraTarget, cameraUp);
+		
 		mainShaderProgram.setMatrix4f("view", viewMatrix);
 		
 		Matrix4f projectionMatrix = new Matrix4f().identity();
