@@ -17,10 +17,16 @@ public class Renderer {
 	
 	private ShaderProgram mainShaderProgram;
 	
+	private Matrix4f projectionMatrix;
+	
 	public Renderer() {
 	}
 	
-	public void init() throws Exception {
+	public void init(Window window) throws Exception {
+		
+		projectionMatrix = new Matrix4f().identity();
+		projectionMatrix = new Matrix4f().identity();
+		projectionMatrix.perspective((float) Math.toRadians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
 		
 		mainShaderProgram = new ShaderProgram();
 		mainShaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex/mainVertex.vs"));
@@ -33,6 +39,8 @@ public class Renderer {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		
+		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		
 		float vertices[] = {
 			0.5f, 0.5f, 0.5f, //top right front 0
@@ -118,8 +126,6 @@ public class Renderer {
 		
 		mainShaderProgram.setMatrix4f("view", viewMatrix);
 		
-		Matrix4f projectionMatrix = new Matrix4f().identity();
-		projectionMatrix.perspective((float) Math.toRadians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
 		mainShaderProgram.setMatrix4f("projection", projectionMatrix);
 		
 		for (int i = 0; i < objects.size(); i++) {
@@ -136,6 +142,10 @@ public class Renderer {
 		
 		mainShaderProgram.unbind();
 		
+	}
+	
+	public void setProjectionMatrix(Matrix4f projection) {
+		projectionMatrix = new Matrix4f(projection);
 	}
 	
 	public void cleanUp() {

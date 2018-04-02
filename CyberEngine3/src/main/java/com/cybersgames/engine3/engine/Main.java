@@ -11,19 +11,20 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 
+import com.cybersgames.engine3.game.TestGame;
+
 public class Main {
 	
 	private Window window;
 	private Renderer renderer;
 	
+	private TestGame game;
+	
 	public static float fps;
 	public static float deltaTime = 0.0f;
 	
-	private Vector3f cameraPos = new Vector3f(0.0f, 0.0f, 3.0f);
-	private Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
-	private Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
-	
-	public Main() throws Exception {
+	public Main(TestGame game) throws Exception {
+		this.game = game;
 		window = new Window(800, 600, "Cyber Engine 3D", false);
 		renderer = new Renderer();
 		init();
@@ -49,7 +50,9 @@ public class Main {
 		
 		GL.createCapabilities();
 		
-		renderer.init();
+		renderer.init(window);
+		
+		game.init(window);
 		
 	}
 	
@@ -94,20 +97,11 @@ public class Main {
 	
 	private void tick() {
 		System.out.println(deltaTime);
+		game.tick();
 	}
 	
 	private void input() {
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			glfwSetWindowShouldClose(window.getHandle(), true);
-		float cameraSpeed = 0.15f * deltaTime;
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_W) == GLFW_PRESS)
-			cameraPos.add(new Vector3f(cameraFront).mul(cameraSpeed));
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_S) == GLFW_PRESS)
-			cameraPos.sub(new Vector3f(cameraFront).mul(cameraSpeed));
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_A) == GLFW_PRESS)
-			cameraPos.sub(new Vector3f(cameraFront).cross(cameraUp).normalize().mul(cameraSpeed));
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS)
-			cameraPos.add(new Vector3f(cameraFront).cross(cameraUp).normalize().mul(cameraSpeed));
+		game.input(window);
 	}
 	
 	private void render() throws Exception {
@@ -117,7 +111,9 @@ public class Main {
 			window.setResized(false);
 		}
 		
-		renderer.render(window, cameraPos, cameraFront, cameraUp);
+		renderer.render(window, game.cameraPos, game.cameraFront, game.cameraUp);
+		
+		game.render(renderer, window);
 		
 	}
 	
@@ -128,7 +124,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		try {
-			new Main();
+			new Main(new TestGame());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
