@@ -11,7 +11,9 @@ public class Camera {
 		FORWARD,
 		BACKWARD,
 		RIGHT,
-		LEFT
+		LEFT,
+		UP,
+		DOWN
 	}
 	
 	private float cameraSpeed;
@@ -25,19 +27,26 @@ public class Camera {
 	private float yaw;
 	private float pitch;
 	
-	public Camera() {
-		cameraPosition = new Vector3f(0.0f, 0.0f, 3.0f);
+	private float zoom;
+	
+	public Camera(Vector3f position) {
+		cameraPosition = position;
 		cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
 		cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
 		cameraRight = new Vector3f(cameraFront).cross(cameraUp).normalize();
 		cameraSpeed = 2.5f;
-		sensitivity = 0.05f;
+		sensitivity = 0.1f;
 		yaw = -90.0f;
 		pitch = 0.0f;
+		zoom = 45.0f;
 	}
 	
 	public void tick() {
 		
+	}
+	
+	public Matrix4f getProjectionMatrix(Window window) {
+		return (new Matrix4f().identity().perspective((float) Math.toRadians(zoom), window.getAspectRatio(), 0.1f, 100.0f));
 	}
 	
 	public Matrix4f getViewMatrix() {
@@ -59,6 +68,12 @@ public class Camera {
 		case LEFT:
 			cameraPosition.sub(new Vector3f(cameraRight).mul(speed));
 			break;
+		case UP:
+			cameraPosition.add(new Vector3f(cameraUp).mul(speed));
+			break;
+		case DOWN:
+			cameraPosition.sub(new Vector3f(cameraUp).mul(speed));
+			break;
 		}
 	}
 
@@ -79,6 +94,11 @@ public class Camera {
 		front.z = (float) (sin(toRadians(yaw)) * cos(toRadians(pitch)));
 		front.normalize();
 		cameraFront = new Vector3f(front);
+	}
+
+	public void processMouseScroll(float yoffset) {
+		zoom -= yoffset;
+		zoom = Utils.clamp(zoom, 1.0f, 45.0f);
 	}
 	
 }

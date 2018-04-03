@@ -15,7 +15,7 @@ import com.cybersgames.engine3.engine.Window;
 
 public class TestGame implements IGame {
 	
-	Camera camera = new Camera();
+	Camera camera = new Camera(new Vector3f(0.0f, 0.0f, 3.0f));
 	
 	float lastX;
 	float lastY;
@@ -44,7 +44,7 @@ public class TestGame implements IGame {
 			camera.processMouseMovement(xoffset, yoffset, true);
 		});
 		glfwSetScrollCallback(window.getHandle(), (otherWindow, xoffset, yoffset) -> {
-			//camera.processMouseScroll((float) yoffset); 
+			camera.processMouseScroll((float) yoffset); 
 		});
 	}
 
@@ -60,6 +60,10 @@ public class TestGame implements IGame {
 			camera.processKeyboard(CameraMovement.LEFT);
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS)
 			camera.processKeyboard(CameraMovement.RIGHT);
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_SPACE) == GLFW_PRESS)
+			camera.processKeyboard(CameraMovement.UP);
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			camera.processKeyboard(CameraMovement.DOWN);
 	}
 	
 	@Override
@@ -69,8 +73,7 @@ public class TestGame implements IGame {
 
 	@Override
 	public void render(Renderer renderer, Window window) {
-		Matrix4f projection = new Matrix4f().identity().perspective((float) Math.toRadians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
-		renderer.setProjectionMatrix(projection);
+		renderer.setProjectionMatrix(camera.getProjectionMatrix(window));
 		renderer.setViewMatrix(camera.getViewMatrix());
 	}
 	
