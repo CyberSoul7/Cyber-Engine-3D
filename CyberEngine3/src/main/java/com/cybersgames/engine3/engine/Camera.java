@@ -26,7 +26,7 @@ public class Camera {
 		cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
 		cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
 		cameraRight = new Vector3f(cameraFront).cross(cameraUp).normalize();
-		cameraSpeed = 0.007f;
+		cameraSpeed = 2.5f;
 	}
 	
 	public void tick() {

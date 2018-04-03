@@ -59,25 +59,19 @@ public class Main {
 	private void loop() throws Exception {
 		
 		double lastTime = System.nanoTime();
-		double delta = 0;
-		double amountOfTicks = 60.0f;
-		double ns = 1_000_000_000 / amountOfTicks;
+		double ns = 1_000_000_000;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
 		
 		while(!glfwWindowShouldClose(window.getHandle())) {
 			
 			double now = System.nanoTime();
-			delta += (now - lastTime) / ns;
+			deltaTime = (float) ((now - lastTime) / ns);
 			lastTime = now;
 			
-			deltaTime = (float) delta;
 			input();
 			
-			while (delta >= 1) {
-				tick();
-				delta--;
-			}
+			tick();
 			
 			render();
 			frames++;
@@ -96,6 +90,7 @@ public class Main {
 	}
 	
 	private void tick() {
+		System.out.println(deltaTime);
 		game.tick();
 	}
 	
