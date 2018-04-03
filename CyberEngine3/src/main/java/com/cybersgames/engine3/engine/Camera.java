@@ -94,6 +94,7 @@ public class Camera {
 		front.z = (float) (sin(toRadians(yaw)) * cos(toRadians(pitch)));
 		front.normalize();
 		cameraFront = new Vector3f(front);
+		cameraRight = new Vector3f(cameraFront).cross(cameraUp).normalize();
 	}
 
 	public void processMouseScroll(float yoffset) {

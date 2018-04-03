@@ -47,7 +47,9 @@ public class TestGame implements IGame {
 			camera.processMouseScroll((float) yoffset); 
 		});
 	}
-
+	
+	boolean disabledCursor = true;
+	
 	@Override
 	public void input(Window window) {
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_ESCAPE) == GLFW_PRESS)

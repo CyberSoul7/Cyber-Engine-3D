@@ -30,4 +30,8 @@ public class Utils {
 		return (Math.max(Math.min(value, max), min));
 	}
 	
+	public static float map(float value, float oldMin, float oldMax, float newMin, float newMax) {
+		return ((value-oldMin)/(oldMax-oldMin) * (newMax-newMin) + newMin);
+	}
+	
 }

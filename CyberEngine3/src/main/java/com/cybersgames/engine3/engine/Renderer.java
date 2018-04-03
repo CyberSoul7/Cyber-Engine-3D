@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -95,16 +96,11 @@ public class Renderer {
 			2, 3, 4,
 			4, 5, 3
 		};
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(0.0f, 0.0f, 0.0f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(2.0f, 5.0f, -15.0f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(-1.5f, -2.2f, -2.5f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(-3.8f, -2.0f, -12.3f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(2.4f, -0.4f, -3.5f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(-1.7f, 3.0f, -7.5f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(1.3f, -2.0f, -2.5f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(1.5f, 2.0f, -2.5f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(1.5f, 0.2f, -1.5f)));
-		objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(-1.3f, 1.0f, -1.5f)));
+		for (float x = 0; x < 10; x++) {
+			for (float z = 0; z < 10; z++) {
+				objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(x, 0.0f, z)));
+			}
+		}
 		
 	}
 	
@@ -131,8 +127,7 @@ public class Renderer {
 			
 			modelMatrix.identity();
 			modelMatrix.translate(object.getPosition());
-			float angle = 20.0f * i;
-			modelMatrix.rotate((float) Math.toRadians(angle), new Vector3f(1.0f, 0.3f, 0.5f));
+			modelMatrix.rotate((float) Math.toRadians(90.0f), new Vector3f(1.0f, 0.0f, 0.0f));
 			mainShaderProgram.setMatrix4f("model", modelMatrix);
 			
 			object.render();
