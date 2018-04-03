@@ -90,7 +90,6 @@ public class Main {
 	}
 	
 	private void tick() {
-		System.out.println(deltaTime);
 		game.tick();
 	}
 	

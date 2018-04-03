@@ -41,7 +41,7 @@ public class TestGame implements IGame {
 			lastX = (float) xpos;
 			lastY = (float) ypos;
 			
-			//camera.processMouseMovement(xoffset, yoffset, true);
+			camera.processMouseMovement(xoffset, yoffset, true);
 		});
 		glfwSetScrollCallback(window.getHandle(), (otherWindow, xoffset, yoffset) -> {
 			//camera.processMouseScroll((float) yoffset); 
