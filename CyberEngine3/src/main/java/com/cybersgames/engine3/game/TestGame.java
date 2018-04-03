@@ -6,16 +6,16 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.cybersgames.engine3.engine.Camera;
+import com.cybersgames.engine3.engine.Camera.CameraMovement;
 import com.cybersgames.engine3.engine.IGame;
 import com.cybersgames.engine3.engine.Main;
 import com.cybersgames.engine3.engine.Renderer;
 import com.cybersgames.engine3.engine.Utils;
 import com.cybersgames.engine3.engine.Window;
-import com.cybersgames.engine3.engine.Camera.CameraMovement;
 
 public class TestGame implements IGame {
 	
-	Camera camera = new Camera.Builder().position(new Vector3f(0.0f, 0.0f, 3.0f)).build();
+	Camera camera = new Camera();
 	
 	float lastX;
 	float lastY;
@@ -41,10 +41,10 @@ public class TestGame implements IGame {
 			lastX = (float) xpos;
 			lastY = (float) ypos;
 			
-			camera.processMouseMovement(xoffset, yoffset, true);
+			//camera.processMouseMovement(xoffset, yoffset, true);
 		});
 		glfwSetScrollCallback(window.getHandle(), (otherWindow, xoffset, yoffset) -> {
-			camera.processMouseScroll((float) yoffset); 
+			//camera.processMouseScroll((float) yoffset); 
 		});
 	}
 
@@ -64,12 +64,12 @@ public class TestGame implements IGame {
 	
 	@Override
 	public void tick() {
-		
+		camera.tick();
 	}
 
 	@Override
 	public void render(Renderer renderer, Window window) {
-		Matrix4f projection = new Matrix4f().identity().perspective((float) Math.toRadians(camera.getZoom()), window.getAspectRatio(), 0.1f, 100.0f);
+		Matrix4f projection = new Matrix4f().identity().perspective((float) Math.toRadians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
 		renderer.setProjectionMatrix(projection);
 		renderer.setViewMatrix(camera.getViewMatrix());
 	}
