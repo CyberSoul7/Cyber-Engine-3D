@@ -50,9 +50,9 @@ public class Main {
 		
 		GL.createCapabilities();
 		
-		renderer.init(window);
-		
 		game.init(window);
+		
+		renderer.init(window, game.getCamera());
 		
 	}
 	
@@ -96,7 +96,6 @@ public class Main {
 	}
 	
 	private void tick() {
-		System.out.println(deltaTime);
 		game.tick();
 	}
 	
@@ -111,7 +110,7 @@ public class Main {
 			window.setResized(false);
 		}
 		
-		renderer.render(window, game.cameraPos, game.cameraFront, game.cameraUp);
+		renderer.render(window);
 		
 		game.render(renderer, window);
 		

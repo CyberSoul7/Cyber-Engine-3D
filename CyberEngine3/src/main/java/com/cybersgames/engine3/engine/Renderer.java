@@ -18,15 +18,18 @@ public class Renderer {
 	private ShaderProgram mainShaderProgram;
 	
 	private Matrix4f projectionMatrix;
+	private Matrix4f viewMatrix;
 	
 	public Renderer() {
 	}
 	
-	public void init(Window window) throws Exception {
+	public void init(Window window, Camera camera) throws Exception {
 		
 		projectionMatrix = new Matrix4f().identity();
 		projectionMatrix = new Matrix4f().identity();
 		projectionMatrix.perspective((float) Math.toRadians(45.0f), window.getAspectRatio(), 0.1f, 100.0f);
+		
+		viewMatrix = camera.getViewMatrix();
 		
 		mainShaderProgram = new ShaderProgram();
 		mainShaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex/mainVertex.vs"));
@@ -105,7 +108,7 @@ public class Renderer {
 		
 	}
 	
-	public void render(Window window, Vector3f cameraPos, Vector3f cameraFront, Vector3f cameraUp) throws Exception {
+	public void render(Window window) throws Exception {
 		
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -118,11 +121,6 @@ public class Renderer {
 		Matrix4f modelMatrix = new Matrix4f().identity();
 		modelMatrix.rotate((float) (glfwGetTime() * Math.toRadians(50.0f)), new Vector3f(0.5f, 1.0f, 0.0f));
 		mainShaderProgram.setMatrix4f("model", modelMatrix);
-		
-		Matrix4f viewMatrix = new Matrix4f().identity();
-		//viewMatrix.translate(new Vector3f(0.0f, 0.0f, -3.0f));
-		Vector3f cameraTarget = new Vector3f(cameraPos).add(cameraFront);
-		viewMatrix.lookAt(cameraPos, cameraTarget, cameraUp);
 		
 		mainShaderProgram.setMatrix4f("view", viewMatrix);
 		
@@ -146,6 +144,10 @@ public class Renderer {
 	
 	public void setProjectionMatrix(Matrix4f projection) {
 		projectionMatrix = new Matrix4f(projection);
+	}
+	
+	public void setViewMatrix(Matrix4f view) {
+		viewMatrix = new Matrix4f(view);
 	}
 	
 	public void cleanUp() {
