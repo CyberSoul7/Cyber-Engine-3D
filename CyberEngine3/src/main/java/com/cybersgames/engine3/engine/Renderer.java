@@ -15,8 +15,10 @@ import org.lwjgl.opengl.*;
 public class Renderer {
 	
 	private List<GameObject> objects = new ArrayList<GameObject>();
+	private GameObject light;
 	
 	private ShaderProgram mainShaderProgram;
+	private ShaderProgram lightShaderProgram;
 	
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
@@ -36,6 +38,11 @@ public class Renderer {
 		mainShaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex/mainVertex.vs"));
 		mainShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/mainFragment.fs"));
 		mainShaderProgram.link();
+		
+		lightShaderProgram = new ShaderProgram();
+		lightShaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex/lampVertex.vs"));
+		lightShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/lampFragment.fs"));
+		lightShaderProgram.link();
 		
 		glEnable(GL_DEPTH_TEST);
 		
@@ -76,6 +83,9 @@ public class Renderer {
 			0.0f, 0.0f,
 			0.0f, 0.0f
 		};
+		float normals[] = {
+				
+		};
 		int indices[] = {
 			//Front Face
 			0, 2, 4,
@@ -96,11 +106,8 @@ public class Renderer {
 			2, 3, 4,
 			4, 5, 3
 		};
-		for (float x = 0; x < 10; x++) {
-			for (float z = 0; z < 10; z++) {
-				objects.add(new GameObject(new Mesh(vertices, indices, colors, texCoords, "/textures/container.png", "/textures/awesomeface.png"), new Vector3f(x, 0.0f, z)));
-			}
-		}
+		objects.add(new GameObject(new Mesh(vertices, indices, colors), new Vector3f(0.0f, 0.0f, 0.0f)));
+		light = new GameObject(new Mesh(vertices, indices, colors), new Vector3f(1.2f, 1.0f, 2.0f));
 		
 	}
 	
@@ -109,25 +116,43 @@ public class Renderer {
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		mainShaderProgram.bind();
-		
-		mainShaderProgram.setInt("texture1", 0);
-		mainShaderProgram.setInt("texture2", 1);
+		lightShaderProgram.bind();
 		
 		Matrix4f modelMatrix = new Matrix4f().identity();
-		modelMatrix.rotate((float) (glfwGetTime() * Math.toRadians(50.0f)), new Vector3f(0.5f, 1.0f, 0.0f));
+		modelMatrix.scale(new Vector3f(0.2f, 0.2f, 0.2f));
+		lightShaderProgram.setMatrix4f("model", modelMatrix);
+		
+		lightShaderProgram.setMatrix4f("view", viewMatrix);
+		
+		lightShaderProgram.setMatrix4f("projection", projectionMatrix);
+		
+		modelMatrix.identity();
+		modelMatrix.translate(light.getPosition());
+		modelMatrix.rotate(0.0f, new Vector3f(1.0f, 0.0f, 0.0f));
+		lightShaderProgram.setMatrix4f("model", modelMatrix);
+		
+		light.render();
+		
+		lightShaderProgram.unbind();
+		
+		
+		
+		mainShaderProgram.bind();
+		
 		mainShaderProgram.setMatrix4f("model", modelMatrix);
 		
 		mainShaderProgram.setMatrix4f("view", viewMatrix);
 		
 		mainShaderProgram.setMatrix4f("projection", projectionMatrix);
 		
+		mainShaderProgram.setVector3f("objectColor", new Vector3f(1.0f, 0.5f, 0.31f));
+		mainShaderProgram.setVector3f("lightColor", new Vector3f(1.0f, 1.0f, 1.0f));
+		
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
 			
 			modelMatrix.identity();
 			modelMatrix.translate(object.getPosition());
-			modelMatrix.rotate((float) Math.toRadians(90.0f), new Vector3f(1.0f, 0.0f, 0.0f));
 			mainShaderProgram.setMatrix4f("model", modelMatrix);
 			
 			object.render();

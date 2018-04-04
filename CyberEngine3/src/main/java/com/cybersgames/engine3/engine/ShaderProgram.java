@@ -14,6 +14,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class ShaderProgram {
 	
@@ -88,6 +89,10 @@ public class ShaderProgram {
 			value.get(fb);
 			glUniformMatrix4fv(glGetUniformLocation(programId, name), false, fb);
 		}
+	}
+	
+	public void setVector3f(String name, Vector3f value) {
+		glUniform3f(glGetUniformLocation(programId, name), value.x, value.y, value.z);
 	}
 	
 	public void bind() {

@@ -20,26 +20,16 @@ public class Mesh {
 	private int vao;
 	private int vertVbo;
 	private int colorVbo;
-	private int texture1Vbo;
-	private int texture2Vbo;
 	private int ebo;
-	
-	private Texture texture;
-	private Texture overlay;
 
-	public Mesh(float vertices[], int indices[], float colors[], float textures[], String texturePath, String overlayPath) throws Exception {
+	public Mesh(float vertices[], int indices[], float colors[]) throws Exception {
 		vertexCount = indices.length;
-		
-		texture = new Texture(texturePath);
-		overlay = new Texture(overlayPath);
 		
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 		
 		vertVbo = createVbo(vertices, 0, 3);
 		colorVbo = createVbo(colors, 1, 3);
-		texture1Vbo = createVbo(textures, 2, 2);
-		texture2Vbo = createVbo(textures, 3, 2);
 		ebo = createVbo(indices);
 		
 		//Unbind VAO and VBO
@@ -48,12 +38,6 @@ public class Mesh {
 	}
 	
 	public void render() {
-		
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture.getId());
-		
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, overlay.getId());
 		
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
@@ -122,8 +106,6 @@ public class Mesh {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(vertVbo);
 		glDeleteBuffers(colorVbo);
-		glDeleteBuffers(texture1Vbo);
-		glDeleteBuffers(texture2Vbo);
 		glDeleteBuffers(ebo);
 		
 		glBindVertexArray(0);
