@@ -18,7 +18,7 @@ public class Mesh {
 	private int vertVbo;
 	private int normalVbo;
 	private int ebo;
-
+	
 	public Mesh(float vertices[], float[] textCoords, float[] normals, int indices[]) throws Exception {
 		vertexCount = indices.length;
 		

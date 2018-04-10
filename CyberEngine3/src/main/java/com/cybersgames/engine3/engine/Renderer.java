@@ -2,6 +2,7 @@ package com.cybersgames.engine3.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,12 @@ public class Renderer {
 		
 		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		
-		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj"), new Vector3f(0.0f, 0.0f, 0.0f)));
-		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj"), new Vector3f(1.2f, 1.0f, 2.0f));
+		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj"), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
+		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj"), new Vector3f(1.2f, 1.0f, 2.0f), new Material(
+				new Vector3f(),
+				new Vector3f(),
+				new Vector3f(),
+				0.0f));
 		
 	}
 	
@@ -88,13 +93,28 @@ public class Renderer {
 		
 		mainShaderProgram.setMatrix4f("projection", projectionMatrix);
 		
-		mainShaderProgram.setVector3f("objectColor", new Vector3f(1.0f, 0.5f, 0.31f));
-		mainShaderProgram.setVector3f("lightColor", new Vector3f(1.0f, 1.0f, 1.0f));
-		mainShaderProgram.setVector3f("lightPos", light.getPosition());
+		Vector3f lightColor = new Vector3f();
+		lightColor.x = (float) sin(glfwGetTime() * 2.0f);
+		lightColor.y = (float) sin(glfwGetTime() * 0.7f);
+		lightColor.z = (float) sin(glfwGetTime() * 1.3f);
+		
+		light.getMaterial().diffuseColor = new Vector3f(lightColor).mul(0.5f);
+		light.getMaterial().ambientColor = new Vector3f(light.getMaterial().diffuseColor).mul(0.2f);
+		
+		mainShaderProgram.setVector3f("light.position", light.getPosition());
+		mainShaderProgram.setVector3f("light.ambient", light.getMaterial().ambientColor);
+		mainShaderProgram.setVector3f("light.diffuse", light.getMaterial().diffuseColor);
+		mainShaderProgram.setVector3f("light.specular", light.getMaterial().specularColor);
+		
 		mainShaderProgram.setVector3f("viewPos", viewPos);
 		
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
+			
+			mainShaderProgram.setVector3f("material.ambient", object.getMaterial().ambientColor);
+			mainShaderProgram.setVector3f("material.diffuse", object.getMaterial().diffuseColor);
+			mainShaderProgram.setVector3f("material.specular", object.getMaterial().specularColor);
+			mainShaderProgram.setFloat("material.shininess", object.getMaterial().shininess);
 			
 			modelMatrix.identity();
 			modelMatrix.translate(object.getPosition());
