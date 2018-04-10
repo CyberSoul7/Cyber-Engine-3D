@@ -8,7 +8,7 @@ import org.joml.Vector3f;
 
 public class OBJLoader {
 	
-	public static Mesh loadMesh(String fileName) throws Exception {
+	public static Mesh loadMesh(String fileName, String texturePath) throws Exception {
         List<String> lines = Utils.readAllLines(fileName);
         
         List<Vector3f> vertices = new ArrayList<Vector3f>();
@@ -51,7 +51,14 @@ public class OBJLoader {
                     break;
             }
         }
-        return reorderLists(vertices, textures, normals, faces);
+        
+        if (texturePath == null) {
+        	return reorderLists(vertices, textures, normals, faces);
+        }
+        
+        Mesh result = reorderLists(vertices, textures, normals, faces);
+        result.setTexture(new Texture(Utils.loadResource(texturePath)));
+        return result;
     }
 
     private static Mesh reorderLists(List<Vector3f> posList, List<Vector2f> textCoordList,

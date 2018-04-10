@@ -9,6 +9,8 @@ public class Material {
 	public Vector3f specularColor;
 	public float shininess;
 	
+	public int diffuse = 0;
+	
 	public Material(Vector3f color, float shininess) {
 		this(color, color, color, shininess);
 	}

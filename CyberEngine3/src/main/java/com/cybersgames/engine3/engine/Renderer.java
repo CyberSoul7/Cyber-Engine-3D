@@ -52,10 +52,10 @@ public class Renderer {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		
-		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		//glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		
-		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj"), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
-		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj"), new Vector3f(1.2f, 1.0f, 2.0f), new Material(
+		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj", "/textures/container2.png"), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
+		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj", null), new Vector3f(1.2f, 1.0f, 2.0f), new Material(
 				new Vector3f(),
 				new Vector3f(),
 				new Vector3f(),
@@ -111,8 +111,7 @@ public class Renderer {
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
 			
-			mainShaderProgram.setVector3f("material.ambient", object.getMaterial().ambientColor);
-			mainShaderProgram.setVector3f("material.diffuse", object.getMaterial().diffuseColor);
+			mainShaderProgram.setInt("material.diffuse", object.getMaterial().diffuse);
 			mainShaderProgram.setVector3f("material.specular", object.getMaterial().specularColor);
 			mainShaderProgram.setFloat("material.shininess", object.getMaterial().shininess);
 			
