@@ -1,15 +1,8 @@
 package com.cybersgames.engine3.engine;
 
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
-
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.FloatBuffer;
 

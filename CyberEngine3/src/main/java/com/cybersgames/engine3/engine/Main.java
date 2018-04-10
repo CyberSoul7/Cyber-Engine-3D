@@ -104,9 +104,9 @@ public class Main {
 			window.setResized(false);
 		}
 		
-		renderer.render(window);
-		
 		game.render(renderer, window);
+		
+		renderer.render(window);
 		
 	}
 	

@@ -2,9 +2,6 @@ package com.cybersgames.engine3.engine;
 
 import org.lwjgl.opengl.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -19,24 +16,24 @@ public class Mesh {
 	private int vertexCount;
 	private int vao;
 	private int vertVbo;
-	private int colorVbo;
+	private int normalVbo;
 	private int ebo;
 
-	public Mesh(float vertices[], int indices[], float colors[]) throws Exception {
+	public Mesh(float vertices[], float[] textCoords, float[] normals, int indices[]) throws Exception {
 		vertexCount = indices.length;
 		
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 		
 		vertVbo = createVbo(vertices, 0, 3);
-		colorVbo = createVbo(colors, 1, 3);
+		normalVbo = createVbo(normals, 1, 3);
 		ebo = createVbo(indices);
 		
 		//Unbind VAO and VBO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
-	
+
 	public void render() {
 		
 		glBindVertexArray(vao);
@@ -105,7 +102,7 @@ public class Mesh {
 		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(vertVbo);
-		glDeleteBuffers(colorVbo);
+		glDeleteBuffers(normalVbo);
 		glDeleteBuffers(ebo);
 		
 		glBindVertexArray(0);

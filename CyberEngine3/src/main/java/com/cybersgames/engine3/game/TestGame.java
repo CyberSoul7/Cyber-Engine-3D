@@ -77,6 +77,7 @@ public class TestGame implements IGame {
 	public void render(Renderer renderer, Window window) {
 		renderer.setProjectionMatrix(camera.getProjectionMatrix(window));
 		renderer.setViewMatrix(camera.getViewMatrix());
+		renderer.setViewPos(camera.getPosition());
 	}
 	
 	public Camera getCamera() {

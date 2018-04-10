@@ -45,6 +45,10 @@ public class Camera {
 		
 	}
 	
+	public Vector3f getPosition() {
+		return cameraPosition;
+	}
+	
 	public Matrix4f getProjectionMatrix(Window window) {
 		return (new Matrix4f().identity().perspective((float) Math.toRadians(zoom), window.getAspectRatio(), 0.1f, 100.0f));
 	}
