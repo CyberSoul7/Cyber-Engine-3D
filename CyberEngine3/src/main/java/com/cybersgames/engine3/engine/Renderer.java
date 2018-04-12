@@ -45,21 +45,17 @@ public class Renderer {
 		lightShaderProgram.createFragmentshader(Utils.loadResource("/shaders/fragment/lampFragment.fs"));
 		lightShaderProgram.link();
 		
-		glEnable(GL_DEPTH_TEST);
-		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		
-		//glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glEnable(GL_DEPTH_TEST);
 		
-		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj", "/textures/container2.png"), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
-		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj", null), new Vector3f(1.2f, 1.0f, 2.0f), new Material(
-				new Vector3f(),
-				new Vector3f(),
-				new Vector3f(),
-				0.0f));
+		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		
+		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj", new Texture("/textures/grassblock.png")), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
+		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj", null), new Vector3f(1.2f, 1.0f, 2.0f), new Material(new Vector3f(1.0f, 1.0f, 1.0f), 0.0f));
 		
 	}
 	
@@ -93,10 +89,7 @@ public class Renderer {
 		
 		mainShaderProgram.setMatrix4f("projection", projectionMatrix);
 		
-		Vector3f lightColor = new Vector3f();
-		lightColor.x = (float) sin(glfwGetTime() * 2.0f);
-		lightColor.y = (float) sin(glfwGetTime() * 0.7f);
-		lightColor.z = (float) sin(glfwGetTime() * 1.3f);
+		Vector3f lightColor = new Vector3f(1.0f, 1.0f, 1.0f);
 		
 		light.getMaterial().diffuseColor = new Vector3f(lightColor).mul(0.5f);
 		light.getMaterial().ambientColor = new Vector3f(light.getMaterial().diffuseColor).mul(0.2f);
@@ -111,7 +104,7 @@ public class Renderer {
 		for (int i = 0; i < objects.size(); i++) {
 			GameObject object = objects.get(i);
 			
-			mainShaderProgram.setInt("material.diffuse", object.getMaterial().diffuse);
+			mainShaderProgram.setInt("material.diffuse", 0);
 			mainShaderProgram.setVector3f("material.specular", object.getMaterial().specularColor);
 			mainShaderProgram.setFloat("material.shininess", object.getMaterial().shininess);
 			
