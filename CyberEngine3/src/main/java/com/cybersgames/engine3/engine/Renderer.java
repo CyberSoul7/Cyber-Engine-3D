@@ -54,8 +54,8 @@ public class Renderer {
 		
 		glfwSetInputMode(window.getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		
-		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj", new Texture("/textures/grassblock.png")), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
-		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj", null), new Vector3f(1.2f, 1.0f, 2.0f), new Material(new Vector3f(1.0f, 1.0f, 1.0f), 0.0f));
+		objects.add(new GameObject(OBJLoader.loadMesh("/models/cube.obj", new Texture("/textures/container2.png"), new Texture("/textures/container2_specular.png")), new Vector3f(0.0f, 0.0f, 0.0f), new Material(new Vector3f(1.0f, 0.5f, 0.31f), 32.0f)));
+		light = new GameObject(OBJLoader.loadMesh("/models/cube.obj", null, null), new Vector3f(1.2f, 1.0f, 2.0f), new Material(new Vector3f(1.0f, 1.0f, 1.0f), 0.0f));
 		
 	}
 	
@@ -105,6 +105,7 @@ public class Renderer {
 			GameObject object = objects.get(i);
 			
 			mainShaderProgram.setInt("material.diffuse", 0);
+			mainShaderProgram.setInt("material.specular", 1);
 			mainShaderProgram.setVector3f("material.specular", object.getMaterial().specularColor);
 			mainShaderProgram.setFloat("material.shininess", object.getMaterial().shininess);
 			

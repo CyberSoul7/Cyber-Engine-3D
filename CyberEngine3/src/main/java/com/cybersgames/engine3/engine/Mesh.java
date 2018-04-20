@@ -22,6 +22,7 @@ public class Mesh {
 	private int ebo;
 	
 	private Texture texture;
+	private Texture specMap;
 	
 	public Mesh(float vertices[], float[] textCoords, float[] normals, int indices[]) throws Exception {
 		vertexCount = indices.length;
@@ -47,11 +48,24 @@ public class Mesh {
 		return texture;
 	}
 	
+	public void setSpecularMap(Texture specMap) {
+		this.specMap = specMap;
+	}
+	
+	public Texture getSpecularMap() {
+		return specMap;
+	}
+	
 	public void render() {
 		
 		if (texture != null) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture.getId());
+		}
+		
+		if (specMap != null) {
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, specMap.getId());
 		}
 		
 		glBindVertexArray(vao);
