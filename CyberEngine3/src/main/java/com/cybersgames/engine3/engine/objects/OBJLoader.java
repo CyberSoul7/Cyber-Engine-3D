@@ -1,10 +1,13 @@
-package com.cybersgames.engine3.engine;
+package com.cybersgames.engine3.engine.objects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
+import com.cybersgames.engine3.engine.Utils;
+import com.cybersgames.engine3.engine.render.Texture;
 
 public class OBJLoader {
 	

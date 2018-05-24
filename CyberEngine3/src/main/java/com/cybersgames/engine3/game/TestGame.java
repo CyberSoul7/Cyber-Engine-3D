@@ -7,9 +7,9 @@ import org.joml.Vector3f;
 
 import com.cybersgames.engine3.engine.Camera;
 import com.cybersgames.engine3.engine.Camera.CameraMovement;
+import com.cybersgames.engine3.engine.render.Renderer;
 import com.cybersgames.engine3.engine.IGame;
 import com.cybersgames.engine3.engine.Main;
-import com.cybersgames.engine3.engine.Renderer;
 import com.cybersgames.engine3.engine.Utils;
 import com.cybersgames.engine3.engine.Window;
 

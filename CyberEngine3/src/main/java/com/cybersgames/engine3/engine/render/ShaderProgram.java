@@ -1,4 +1,4 @@
-package com.cybersgames.engine3.engine;
+package com.cybersgames.engine3.engine.render;
 
 import static org.lwjgl.opengl.GL20.*;
 import org.lwjgl.opengl.*;

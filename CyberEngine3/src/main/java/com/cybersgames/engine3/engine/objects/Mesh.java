@@ -1,4 +1,4 @@
-package com.cybersgames.engine3.engine;
+package com.cybersgames.engine3.engine.objects;
 
 import org.lwjgl.opengl.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -11,6 +11,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.system.MemoryUtil;
+
+import com.cybersgames.engine3.engine.render.Texture;
 
 public class Mesh {
 	

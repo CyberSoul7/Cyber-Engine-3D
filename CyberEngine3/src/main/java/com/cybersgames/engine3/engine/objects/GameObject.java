@@ -1,4 +1,4 @@
-package com.cybersgames.engine3.engine;
+package com.cybersgames.engine3.engine.objects;
 
 import org.joml.Vector3f;
 

@@ -1,5 +1,7 @@
 package com.cybersgames.engine3.engine;
 
+import com.cybersgames.engine3.engine.render.Renderer;
+
 public interface IGame {
 	
 	public void init(Window window);
